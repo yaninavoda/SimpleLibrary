@@ -4,10 +4,14 @@
     {
         static void Main(string[] args)
         {
-            var repo = new Repository();
             Service.Greeting();
-            repo.Insert(new LibraryEntity());
-            Service.ShowLibraries(repo);
+            var service = new Service();
+           
+            service.ShowLibraries();
+            //service.AddLibrary();
+            service.AddBook();
+
+
             Console.ReadKey();
         }
     }
