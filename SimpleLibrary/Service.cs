@@ -3,7 +3,7 @@ namespace SimpleLibrary
 {
     public class Service
     {
-        //private Repository? _libRepository;
+        private Repository? _libRepository;
         public static void Greeting()
         {
             Console.WriteLine("Welcome to the library service app!");
@@ -16,13 +16,16 @@ namespace SimpleLibrary
             
             return libTitle;
         }
-        //public static LibraryEntity AddLibrary()
-        //{
-              
-        //}
 
+        public static void ShowLibraries(Repository repo)
+        {   
+            foreach (var lib in repo.GetAll())
+            {
+                Console.WriteLine($"Library id: {lib.Id}, Library title: {lib.LibTitle}");
+            } 
+        }
         public void AddBook() { }
-        public void ShowLibraries() { }
+        
         public void ShowBooks() { }
     }
 }

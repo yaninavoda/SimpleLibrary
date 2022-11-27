@@ -9,6 +9,11 @@ namespace SimpleLibrary
         //private static readonly string DbFilePathBooks = @"D:\beetroot\DbFolder\db_Books.json";
         private List<LibraryEntity> _libStorage = ReadStorage(DbFilePathLibraries);
 
+
+        public IList<LibraryEntity> GetAll()
+        {
+            return _libStorage;
+        }
         public void Insert(LibraryEntity entity)
         {
             if (entity.LibTitle == null)
