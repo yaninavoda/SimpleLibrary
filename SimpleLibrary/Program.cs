@@ -3,14 +3,15 @@
     internal class Program
     {
         static void Main(string[] args)
-        {
-            Service.Greeting();
+        {              
             var service = new Service();
-           
-            service.ShowLibraries();
+
+            //service.Greeting();
+            service.GetCommand();
+            //service.ShowLibraries();
             //service.AddLibrary();
             //service.AddBook();
-            service.ShowBooks();
+            //service.ShowBooks();
 
             Console.ReadKey();
         }

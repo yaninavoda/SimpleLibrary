@@ -13,13 +13,54 @@ namespace SimpleLibrary
         {
             Repository = new Repository();
         }
-        public static void Greeting()
+        public void Greeting()
         {
             Console.WriteLine("Welcome to the library service app!");
         }
-        
+         public void GetCommand()
+        {
+            do
+            {
+                Console.WriteLine("Welcome to library service!");
+                Console.WriteLine("Choose operation:\n" +
+                    "(-lib_c) - create library,\n" +
+                    "(-book_c) - create book,\n" +
+                    "(-lib_list) - print all libraries,\n" +
+                    "(-book_list) - print all books in the chosen library,\n" +
+                    "(-out) - exit:");
+
+                string input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "-lib_c ":
+                        AddLibrary();
+                        break;
+                    case "-book_c":
+                        AddBook();
+                        break;
+                    case "-lib_list":
+                        ShowLibraries();
+                        break;
+                    case "-book_list":
+                        ShowBooks();
+                        break;
+
+                    case "-out":
+                        goto Exit;
+                    default:
+                        continue;
+                }
+            } while (true);
+
+        Exit:;
+
+            Console.ReadKey();
+
+        }
         public void AddLibrary()
         {
+            Console.Clear();
             Repository.InsertLibrary(new LibraryEntity());
         }
         public static string AskLibraryTitle()
@@ -31,7 +72,9 @@ namespace SimpleLibrary
         }
 
         public void ShowLibraries()
-        {   var libraries = Repository.GetAllLibs();
+        {   
+            Console.Clear();
+            var libraries = Repository.GetAllLibs();
 
             foreach (var lib in libraries)
             {
@@ -52,13 +95,14 @@ namespace SimpleLibrary
                 Author = AskAuthor(),
                 Year = AskYear()
             };
-           
+            Console.Clear();
             Repository.InsertBook(newBook);
             ShowAddedBook(newBook);
         }
         
         public void ShowBooks()
-        {
+        { 
+            Console.Clear();
             var library = ChooseLibrary();
             foreach (var book in Repository.GetAllBooks())
             {
@@ -96,7 +140,7 @@ namespace SimpleLibrary
             Console.Clear();
             Console.WriteLine("Please enter the author:");
             string bookAuthor = Console.ReadLine();
-
+            
             return bookAuthor;
         }
 
