@@ -59,12 +59,19 @@ namespace SimpleLibrary
         
         public void ShowBooks()
         {
-            
+            var library = ChooseLibrary();
+            foreach (var book in Repository.GetAllBooks())
+            {
+                if (book.LibraryId == library.Id)
+                {
+                    ShowBook(book);
+                }
+            }
         }
 
         private LibraryEntity ChooseLibrary()
         {
-            Console.WriteLine("To add a book choose library id:");
+            Console.WriteLine("Choose library id:");
 
             foreach (var lib in Repository.GetAllLibs())
             {
@@ -101,15 +108,18 @@ namespace SimpleLibrary
 
             return bookYear;
         }
-
         private static void ShowAddedBook(BookEntity newBook)
         {
             Console.WriteLine("You added a new book!");
-            Console.WriteLine($"Book id: {newBook.Id}");
-            Console.WriteLine($"Library id: {newBook.LibraryId}");
-            Console.WriteLine($"Book Title: {newBook.Title}");
-            Console.WriteLine($"Book Author: {newBook.Author}");
-            Console.WriteLine($"Published: {newBook.Year}");
+            ShowBook(newBook);
+        }
+        private static void ShowBook(BookEntity book)
+        {
+            Console.WriteLine($"Book id: {book.Id}");
+            Console.WriteLine($"Library id: {book.LibraryId}");
+            Console.WriteLine($"Book Title: {book.Title}");
+            Console.WriteLine($"Book Author: {book.Author}");
+            Console.WriteLine($"Published: {book.Year}");
         }
     }
 }

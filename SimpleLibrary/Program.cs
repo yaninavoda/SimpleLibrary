@@ -9,8 +9,8 @@
            
             service.ShowLibraries();
             //service.AddLibrary();
-            service.AddBook();
-
+            //service.AddBook();
+            service.ShowBooks();
 
             Console.ReadKey();
         }
