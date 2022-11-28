@@ -2,13 +2,19 @@
 {
     public class Service
     {
-        public Repository Repository;
-        
+        //public Repository Repository;   
+        private RepositoryGeneric<LibraryEntity> _libraries;   
+        private RepositoryGeneric<BookEntity> _books;
 
         public Service()
         {
-            Repository = new Repository();
+            _libraries = new RepositoryGeneric<LibraryEntity>();
+            _books = new RepositoryGeneric<BookEntity>();
         }
+        //public Service()
+        //{
+        //    Repository = new Repository();
+        //}
         public void Greeting()
         {
             Console.WriteLine("Welcome to the library service app!");
@@ -65,7 +71,7 @@
                 LibTitle = AskLibraryTitle()
             };
 
-            Repository.InsertLibrary(newLibrary);
+            _libraries.Insert(newLibrary);
         }
 
         public void AddBook()
@@ -80,7 +86,9 @@
                 Year = AskYear()
             };
             Console.Clear();
-            Repository.InsertBook(newBook);
+
+            _books.Insert(newBook);
+
             ShowAddedBook(newBook);
         }
         public static string AskLibraryTitle()
@@ -94,7 +102,7 @@
         public void ShowLibraries()
         {   
             Console.Clear();
-            var libraries = Repository.GetAllLibs();
+            var libraries = _libraries.GetAll();
 
             foreach (var lib in libraries)
             {
@@ -106,7 +114,7 @@
         { 
             Console.Clear();
             var library = ChooseLibrary();
-            foreach (var book in Repository.GetAllBooks())
+            foreach (var book in _books.GetAll())
             {
                 if (book.LibraryId == library.Id)
                 {
@@ -119,13 +127,13 @@
         {
             Console.WriteLine("Choose library id:");
 
-            foreach (var lib in Repository.GetAllLibs())
+            foreach (var lib in _libraries.GetAll())
             {
                 Console.WriteLine($"Id: {lib.Id}, Title: {lib.LibTitle}");
             }
 
  
-            return Repository.GetLibrary(int.Parse(Console.ReadLine()));
+            return _libraries.Get(int.Parse(Console.ReadLine()));
         }
 
         public static string AskBookTitle()
