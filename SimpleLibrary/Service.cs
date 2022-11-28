@@ -1,8 +1,4 @@
-﻿
-using System.Net;
-using System.Net.Http.Headers;
-
-namespace SimpleLibrary
+﻿namespace SimpleLibrary
 {
     public class Service
     {
@@ -21,7 +17,7 @@ namespace SimpleLibrary
         {
             do
             {
-                Console.WriteLine("Welcome to library service!");
+                Console.WriteLine();
                 Console.WriteLine("Choose operation:\n" +
                     "(-lib_c) - create library,\n" +
                     "(-book_c) - create book,\n" +
@@ -40,9 +36,11 @@ namespace SimpleLibrary
                         AddBook();
                         break;
                     case "-lib_list":
+                        Console.Clear();
                         ShowLibraries();
                         break;
                     case "-book_list":
+                        Console.Clear();
                         ShowBooks();
                         break;
 

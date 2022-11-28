@@ -1,9 +1,7 @@
 ﻿namespace SimpleLibrary
 {
-    public class LibraryEntity
+    public class LibraryEntity : BaseEntity
     {   
-        public int Id { get; set; }
-        //public DateTime CreatedDate { get; set; }
         public string LibTitle { get; set; }
           
     }

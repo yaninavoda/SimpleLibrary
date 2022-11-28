@@ -6,13 +6,9 @@
         {              
             var service = new Service();
 
-            //service.Greeting();
+            service.Greeting();
             service.GetCommand();
-            //service.ShowLibraries();
-            //service.AddLibrary();
-            //service.AddBook();
-            //service.ShowBooks();
-
+            
             Console.ReadKey();
         }
     }
