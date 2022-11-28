@@ -29,7 +29,7 @@
 
                 switch (input)
                 {
-                    case "-lib_c ":
+                    case "-lib_c":
                         AddLibrary();
                         break;
                     case "-book_c":
@@ -59,7 +59,29 @@
         public void AddLibrary()
         {
             Console.Clear();
-            Repository.InsertLibrary(new LibraryEntity());
+
+            var newLibrary = new LibraryEntity
+            {
+                LibTitle = AskLibraryTitle()
+            };
+
+            Repository.InsertLibrary(newLibrary);
+        }
+
+        public void AddBook()
+        {
+            var library = ChooseLibrary();
+
+            var newBook = new BookEntity
+            {
+                LibraryId = library.Id,
+                Title = AskBookTitle(),
+                Author = AskAuthor(),
+                Year = AskYear()
+            };
+            Console.Clear();
+            Repository.InsertBook(newBook);
+            ShowAddedBook(newBook);
         }
         public static string AskLibraryTitle()
         {
@@ -80,24 +102,6 @@
             } 
         }
 
-        
-
-        public void AddBook()  
-        {
-            var library = ChooseLibrary();
-            
-            var newBook = new BookEntity
-            {
-                LibraryId = library.Id,
-                Title = AskBookTitle(),
-                Author = AskAuthor(),
-                Year = AskYear()
-            };
-            Console.Clear();
-            Repository.InsertBook(newBook);
-            ShowAddedBook(newBook);
-        }
-        
         public void ShowBooks()
         { 
             Console.Clear();
@@ -162,6 +166,7 @@
             Console.WriteLine($"Book Title: {book.Title}");
             Console.WriteLine($"Book Author: {book.Author}");
             Console.WriteLine($"Published: {book.Year}");
+            Console.WriteLine();
         }
     }
 }
