@@ -1,8 +1,7 @@
 ﻿namespace SimpleLibrary
 {
     public class Service
-    {
-        //public Repository Repository;   
+    {  
         private RepositoryGeneric<LibraryEntity> _libraries;   
         private RepositoryGeneric<BookEntity> _books;
 
@@ -11,10 +10,7 @@
             _libraries = new RepositoryGeneric<LibraryEntity>();
             _books = new RepositoryGeneric<BookEntity>();
         }
-        //public Service()
-        //{
-        //    Repository = new Repository();
-        //}
+
         public void Greeting()
         {
             Console.WriteLine("Welcome to the library service app!");
