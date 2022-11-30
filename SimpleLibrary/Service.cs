@@ -17,6 +17,7 @@
         }
          public void GetCommand()
         {
+            string input;
             do
             {
                 Console.WriteLine();
@@ -27,7 +28,7 @@
                     "(-book_list) - print all books in the chosen library,\n" +
                     "(-out) - exit:");
 
-                string input = Console.ReadLine();
+                input = Console.ReadLine();
 
                 switch (input)
                 {
@@ -47,13 +48,13 @@
                         break;
 
                     case "-out":
-                        goto Exit;
+                        break;
                     default:
                         continue;
                 }
-            } while (true);
+            } while (input != "-out");
 
-        Exit:;
+        
 
             Console.ReadKey();
 
