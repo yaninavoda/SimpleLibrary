@@ -1,4 +1,6 @@
-﻿namespace SimpleLibrary
+﻿using FluentValidation.Results;
+
+namespace SimpleLibrary
 {
     public class Service
     {  
@@ -17,10 +19,10 @@
         }
          public void GetCommand()
         {
-            string input;
+            string? input;
             do
-            {
-                Console.WriteLine();
+            {   Console.Clear();
+
                 Console.WriteLine("Choose operation:\n" +
                     "(-lib_c) - create library,\n" +
                     "(-book_c) - create book,\n" +
@@ -39,11 +41,11 @@
                         AddBook();
                         break;
                     case "-lib_list":
-                        Console.Clear();
+                        //Console.Clear();
                         ShowLibraries();
                         break;
                     case "-book_list":
-                        Console.Clear();
+                        //Console.Clear();
                         ShowBooks();
                         break;
 
@@ -54,73 +56,113 @@
                 }
             } while (input != "-out");
 
-        
-
             Console.ReadKey();
 
         }
         public void AddLibrary()
         {
-            Console.Clear();
-
             var newLibrary = new LibraryEntity
             {
                 LibTitle = AskLibraryTitle()
             };
 
-            _libraries.Insert(newLibrary);
+            var libraryValidator = new LibraryValidator();
+            ValidationResult results = libraryValidator.Validate(newLibrary);
+
+            if (! results.IsValid)
+            {
+                Console.WriteLine($"{results.Errors.First()}");
+                Console.WriteLine();
+                Console.WriteLine("Press any key to proceed.");
+                Console.ReadKey();
+            }
+            else
+            {
+                _libraries.Insert(newLibrary);
+            }           
         }
 
         public void AddBook()
         {
             var library = ChooseLibrary();
 
-            var newBook = new BookEntity
+            if (library != null)
             {
-                LibraryId = library.Id,
-                Title = AskBookTitle(),
-                Author = AskAuthor(),
-                Year = AskYear()
-            };
-            Console.Clear();
+                var newBook = new BookEntity
+                {
+                    LibraryId = library.Id,
+                    Title = AskBookTitle(),
+                    Author = AskAuthor(),
+                    Year = AskYear()
+                };
 
-            _books.Insert(newBook);
+                var bookValidator = new BookValidator();
+                ValidationResult results = bookValidator.Validate(newBook);
 
-            ShowAddedBook(newBook);
+                if (!results.IsValid)
+                {
+                    foreach (var failure in results.Errors)
+                    {
+                        Console.WriteLine("Property " + failure.PropertyName +
+                            " failed validation. Error was: " + failure.ErrorMessage);
+                    }
+
+                    Console.WriteLine();
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.Clear();
+
+                    _books.Insert(newBook);
+
+                    ShowAddedBook(newBook);
+                }
+            }
+             
         }
         public static string AskLibraryTitle()
         {
             Console.WriteLine("You are adding a new library. Please enter the title:");
-            string libTitle = Console.ReadLine();
+            string? libTitle = Console.ReadLine();
             
-            return libTitle;
+            return libTitle ?? string.Empty;
         }
 
         public void ShowLibraries()
         {   
-            Console.Clear();
+            
             var libraries = _libraries.GetAll();
 
             foreach (var lib in libraries)
             {
                 Console.WriteLine($"Library id: {lib.Id}, Library title: {lib.LibTitle}");
-            } 
+            }
+
+            Console.WriteLine("Press any key to continue.");
+            Console.ReadKey();
         }
 
         public void ShowBooks()
         { 
-            Console.Clear();
             var library = ChooseLibrary();
-            foreach (var book in _books.GetAll())
+
+            if (library != null)
             {
-                if (book.LibraryId == library.Id)
+                foreach (var book in _books.GetAll())
                 {
-                    ShowBook(book);
+                    if (book.LibraryId == library.Id)
+                    {
+                        ShowBook(book);
+                    }
                 }
             }
+            Console.WriteLine("Press any key to continue.");
+            Console.ReadKey();
         }
 
-        private LibraryEntity ChooseLibrary()
+        private LibraryEntity? ChooseLibrary()
         {
             Console.WriteLine("Choose library id:");
 
@@ -129,40 +171,64 @@
                 Console.WriteLine($"Id: {lib.Id}, Title: {lib.LibTitle}");
             }
 
- 
-            return _libraries.Get(int.Parse(Console.ReadLine()));
+            if (int.TryParse(Console.ReadLine(), out int libraryId)) 
+            {
+                if (libraryId <= _libraries.GetAll().Count)
+                {
+                    return _libraries.Get(libraryId);
+                }
+                else Console.WriteLine("You entered an incorrect library id.");
+
+                return null;
+            }
+            else Console.WriteLine("id must be a number.");
+
+            return null;
         }
 
         public static string AskBookTitle()
         {
             Console.Clear();
             Console.WriteLine("You are adding a new book. Please enter the title:");
-            string bookTitle = Console.ReadLine();
+            string? bookTitle = Console.ReadLine();
 
-            return bookTitle;
+            return bookTitle ?? string.Empty;
         }
 
         public static string AskAuthor()
         {
             Console.Clear();
             Console.WriteLine("Please enter the author:");
-            string bookAuthor = Console.ReadLine();
+            string? bookAuthor = Console.ReadLine();
             
-            return bookAuthor;
+            return bookAuthor ?? string.Empty;
         }
 
         public static int AskYear()
         {
             Console.Clear();
             Console.WriteLine("Please enter the publication year:");
-            var bookYear = int.Parse(Console.ReadLine());
 
-            return bookYear;
+            if (int.TryParse(Console.ReadLine(), out int bookYear))
+            {
+                return bookYear;
+            }
+            else
+            {
+                Console.WriteLine("Publication year must be a number.");
+
+                return int.MaxValue;
+            }  
         }
         private static void ShowAddedBook(BookEntity newBook)
         {
             Console.WriteLine("You added a new book!");
+
             ShowBook(newBook);
+
+            Console.WriteLine();
+            Console.WriteLine("Press any key to continue.");
+            Console.ReadKey();
         }
         private static void ShowBook(BookEntity book)
         {
@@ -171,6 +237,7 @@
             Console.WriteLine($"Book Title: {book.Title}");
             Console.WriteLine($"Book Author: {book.Author}");
             Console.WriteLine($"Published: {book.Year}");
+
             Console.WriteLine();
         }
     }
